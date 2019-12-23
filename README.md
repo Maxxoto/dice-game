@@ -1,2 +1,2 @@
 # dice-game
-A Dice Game coded with Javascript :love:
+A Dice Game coded with Javascript :heart:
