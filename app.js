@@ -9,11 +9,11 @@ GAME RULES:
 
 */
 
-let scores, dice,currScore,btnRoll,gloScore0,gloScore1
-var active, activePlayer,roundScore
-scores = [0, 0];
-roundScore = 0;
-activePlayer = 0;
+let scores, dice,currScore,btnRoll,gloScore0,gloScore1 //tidak bisa hoisting variabel
+var active, activePlayer,roundScore //bisa hoisting variabel
+scores = [0,0]
+roundScore = 0
+activePlayer = 0
 
 
 //Komponen
@@ -22,22 +22,35 @@ gloScore0 = document.querySelector("#score-0")
 gloScore1 = document.querySelector("#score-1")
 btnRoll = document.querySelector(".btn-roll")
 btnHold = document.querySelector(".btn-hold")
+btnNew = document.querySelector(".btn-new")
 active = document.querySelector(".player-"+activePlayer+"-panel.active")    
 
-function checkScore(){
-    if(scores[0] >= 100){
-        window.alert("Player 1 Menang !")
-    }else if(scores[1] >= 100){
-        window.alert("Player 2 Menang !")
-    }
+
+function newGame(){
+    clearGlobalScore()
+    scores = [0,0]
+    roundScore = 0
+    activePlayer = 0
+}
+function clearGlobalScore(){
     gloScore0.textContent = 0
     gloScore1.textContent = 0
+}
+function checkScore(){
+    if(scores[0] >= 100){
+        window.alert("Player 1 Menang !")   
+        clearGlobalScore()        
+    }else if(scores[1] >= 100){
+        window.alert("Player 2 Menang !")
+        clearGlobalScore()
+    }
+    
 }
 
 
 btnRoll.addEventListener("click", rollDice)
 btnHold.addEventListener("click", holdScore)
-
+btnNew.addEventListener("click",newGame)
 
 function activeState(activePlayer){
     active = document.querySelector(".player-"+activePlayer+"-panel")    
@@ -88,6 +101,7 @@ function rollDice() {
 
 function holdScore(){
     scores[activePlayer] += roundScore
+    console.log(roundScore)
     currScore.textContent = 0    
     switchPlayer()
     gloScore0.textContent = scores[0] //Menampilkan global score ke ui
