@@ -9,15 +9,88 @@ GAME RULES:
 
 */
 
-let scores,roundScore,activePlayer,dice,playerScore,score
+let scores, dice,currScore,btnRoll,gloScore0,gloScore1
+var active, activePlayer,roundScore
+scores = [0, 0];
+roundScore = 0;
+activePlayer = 0;
 
-scores = [0,0]
-roundScore = 0
 
-activePlayer = 0
+//Komponen
+currScore = document.querySelector("#current-" + activePlayer)
+gloScore0 = document.querySelector("#score-0")
+gloScore1 = document.querySelector("#score-1")
+btnRoll = document.querySelector(".btn-roll")
+btnHold = document.querySelector(".btn-hold")
+active = document.querySelector(".player-"+activePlayer+"-panel.active")    
 
-dice = Math.floor(Math.random() * 6) + 1
-score = document.querySelector("#current-" + activePlayer).textContent = dice 
+function checkScore(){
+    if(scores[0] >= 100){
+        window.alert("Player 1 Menang !")
+    }else if(scores[1] >= 100){
+        window.alert("Player 2 Menang !")
+    }
+    gloScore0.textContent = 0
+    gloScore1.textContent = 0
+}
 
-playerScore = document.querySelector("#score-" + activePlayer).textContent = playerScore + score
 
+btnRoll.addEventListener("click", rollDice)
+btnHold.addEventListener("click", holdScore)
+
+
+function activeState(activePlayer){
+    active = document.querySelector(".player-"+activePlayer+"-panel")    
+    return active    
+}
+function activeRound(activePlayer){
+    currScore = document.querySelector("#current-" + activePlayer)
+    return currScore
+}
+
+function switchPlayer(){    
+    
+    if(activePlayer==0){        
+        active.classList.remove("active")        
+        activePlayer=1
+        active = activeState(activePlayer)                 
+        active.classList.add("active")
+        roundScore = 0
+    }else{
+        active.classList.remove("active")
+        activePlayer=0
+        active = activeState(activePlayer)        
+        active.classList.add("active")
+        roundScore = 0
+    }
+        
+}
+
+function rollDice() {
+  dice = Math.floor(Math.random() * 6) + 1; //Digunakan untuk membuat angka acak 1-6 dan pembulatan kebawah
+  document.querySelector(".dice").setAttribute("src", "dice-" + dice + ".png"); //Mengganti gambar dadu sesuai angka dadu yang diacak dari variabel dice
+  console.log("Score pertama kali : " + roundScore)
+  roundScore += dice
+  
+  console.log("State player saat ini : " + activePlayer)
+  
+  currScore = activeRound(activePlayer)
+  currScore.textContent = roundScore
+  
+  if (dice == 1) {
+    window.alert("Mendapatkan angka dadu 1 , score anda akan direset ")
+    roundScore = 0
+    currScore.textContent = roundScore
+    switchPlayer()
+  }
+
+}
+
+function holdScore(){
+    scores[activePlayer] += roundScore
+    currScore.textContent = 0    
+    switchPlayer()
+    gloScore0.textContent = scores[0] //Menampilkan global score ke ui
+    gloScore1.textContent = scores[1] //Menampilkan global score ke ui
+    checkScore()
+}
